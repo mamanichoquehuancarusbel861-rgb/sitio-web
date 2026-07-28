@@ -10,14 +10,14 @@
 <body>
 
     <header class="main-web-header">
-        <div class="web-logo"><a href="index.html">M.A.S. S.A.C.</a></div>
+        <div class="web-logo"><a href="{{ url_for('index') }}">M.A.S. S.A.C.</a></div>
         <nav>
             <ul class="web-nav">
-                <li><a href="index.html" class="nav-btn">Inicio</a></li>
-                <li><a href="operaciones.html" class="nav-btn">Operaciones</a></li>
-                <li><a href="proyectos.html" class="nav-btn">Proyectos</a></li>
-                <li><a href="empleos.html" class="nav-btn">Empleos</a></li>
-                <li><a href="contacto.html" class="nav-btn active">Contacto</a></li>
+                <li><a href="{{ url_for('index') }}" class="nav-btn">Inicio</a></li>
+                <li><a href="{{ url_for('operaciones') }}" class="nav-btn">Operaciones</a></li>
+                <li><a href="{{ url_for('proyectos') }}" class="nav-btn">Proyectos</a></li>
+                <li><a href="{{ url_for('empleos') }}" class="nav-btn">Empleos</a></li>
+                <li><a href="{{ url_for('contacto') }}" class="nav-btn active">Contacto</a></li>
             </ul>
         </nav>
         <div class="search-box">
@@ -47,6 +47,6 @@
         <div>&copy; 2026 Minera Andina del Sur S.A.C. - Todos los derechos reservados.</div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

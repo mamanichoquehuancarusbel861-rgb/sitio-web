@@ -1,4 +1,4 @@
-// Datos dinámicos para la sección de Proyectos
+// Datos dinámicos para la sección de Proyectos (usado solo como respaldo local)
 const proyectosData = {
     oro: {
         ubicacion: "Provincia de Carabaya, Región Puno.",
@@ -24,17 +24,23 @@ function changeProject(proyectoKey) {
     const data = proyectosData[proyectoKey];
     if (!data) return;
 
-    document.getElementById('proj-ubica').innerText = data.ubicacion;
-    document.getElementById('proj-produ').innerText = data.produccion;
-    document.getElementById('proj-estado').innerText = data.estado;
-    document.getElementById('proj-img-element').src = data.imagen;
+    const elUbica = document.getElementById('proj-ubica');
+    const elProdu = document.getElementById('proj-produ');
+    const elEstado = document.getElementById('proj-estado');
+    const elImg = document.getElementById('proj-img-element');
+
+    if (elUbica) elUbica.innerText = data.ubicacion;
+    if (elProdu) elProdu.innerText = data.produccion;
+    if (elEstado) elEstado.innerText = data.estado;
+    if (elImg) elImg.src = data.imagen;
 
     // Actualizar clase activa
     document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-    document.getElementById(`side-${proyectoKey}`).classList.add('active');
+    const activeLi = document.getElementById(`side-${proyectoKey}`);
+    if (activeLi) activeLi.classList.add('active');
 }
 
-// Control Modal Postulación
+// Control Modal Postulación (modal genérico, si existe en la página)
 function openModal() {
     const modal = document.getElementById('modalForm');
     if (modal) modal.style.display = 'flex';
@@ -51,25 +57,25 @@ function submitForm(event) {
     closeModal();
 }
 
-// Abrir y Cerrar Modal "NOSOTROS"
-function openNosotrosModal() {
-    const modal = document.getElementById('modalNosotros');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
+// Abrir y Cerrar Modal "NOSOTROS" (si existe en la página; index.html define su propia versión)
+if (typeof window.openNosotrosModal !== 'function') {
+    window.openNosotrosModal = function () {
+        const modal = document.getElementById('modalNosotros');
+        if (modal) modal.style.display = 'flex';
+    };
 }
 
-function closeNosotrosModal() {
-    const modal = document.getElementById('modalNosotros');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+if (typeof window.closeNosotrosModal !== 'function') {
+    window.closeNosotrosModal = function () {
+        const modal = document.getElementById('modalNosotros');
+        if (modal) modal.style.display = 'none';
+    };
 }
 
 // Cerrar modal al hacer clic fuera del contenido transparente
-window.addEventListener('click', function(event) {
+window.addEventListener('click', function (event) {
     const modal = document.getElementById('modalNosotros');
-    if (event.target === modal) {
+    if (modal && event.target === modal) {
         modal.style.display = 'none';
     }
 });
@@ -195,38 +201,3 @@ function initScrambleAnimations() {
 }
 
 document.addEventListener('DOMContentLoaded', initScrambleAnimations);
-
-import PocketBase from 'https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.es.mjs';
-const pb = new PocketBase('http://127.0.0.1:8090');
-
-// Comprobar si el usuario está autenticado
-if (!pb.authStore.isValid) {
-    // Si no está logueado, lo redirige al login o a la vista pública
-    window.location.href = 'login.html';
-}
-
-// Botón para cerrar sesión (Logout)
-function cerrarSesion() {
-    pb.authStore.clear();
-    window.location.href = 'index.html';
-}
-
-fetch('http://127.0.0.1:8090/api/health')
-  .then(res => res.json())
-  .then(data => console.log('¡Conexión exitosa con PocketBase!', data))
-  .catch(err => console.error('Error de conexión:', err));
-
-  import PocketBase from 'https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.es.mjs';
-const pb = new PocketBase('http://127.0.0.1:8090');
-
-async function verificarConexion() {
-    try {
-        // Intentamos hacer una petición simple a una colección (ej: 'productos')
-        await pb.collection('productos').getList(1, 1);
-        console.log("✅ Conexión establecida correctamente con PocketBase.");
-    } catch (error) {
-        console.warn("⚠️ No se pudo conectar a PocketBase. Asegúrate de que el servidor local esté encendido en el puerto 8090.", error);
-    }
-}
-
-verificarConexion();

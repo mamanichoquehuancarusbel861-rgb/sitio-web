@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso Administrativo - M.A.S. S.A.C.</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="login-body">
 
     <div class="login-container">
         <h2>Panel Administrativo</h2>
-        <form action="{{ url_for('login') }}" method="POST">
+        <form id="loginForm">
     <!-- Tus campos de correo y contraseña -->
     <label for="email">Correo Electrónico:</label>
     <input type="email" id="email" name="email" required>
@@ -21,7 +21,7 @@
     <button type="submit">Ingresar</button>
 </form>
         <p id="error-msg" style="color: #ff6b6b; margin-top: 10px; font-size: 14px; text-align: center;"></p>
-        <a href="index.html" class="back-link">← Volver al sitio público</a>
+        <a href="{{ url_for('index') }}" class="back-link">← Volver al sitio público</a>
     </div>
 
     <!-- Script de autenticación con PocketBase para Superusuarios -->
@@ -44,7 +44,7 @@
                 await pb.collection('_superusers').authWithPassword(email, password);
                 
                 alert('¡Inicio de sesión exitoso!');
-                window.location.href = 'admin.html'; // Redirige al panel de control
+                window.location.href = "{{ url_for('admin') }}"; // Redirige al panel de control
                 
             } catch (error) {
                 console.error('Error de autenticación:', error);

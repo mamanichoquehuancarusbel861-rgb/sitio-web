@@ -6,13 +6,10 @@
     <title>Minera Andina del Sur S.A.C. - Inicio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <img src="http://127.0.0.1:8090/_/" alt="Descripción de la imagen">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <!-- ENCABEZADO PRINCIPAL -->
     <header class="main-web-header">
@@ -47,7 +44,7 @@
 <p class="hero-subtitle">Protección del medio ambiente, altos estándares de ingeniería y desarrollo social para nuestras comunidades.</p>
 
     <!-- El carrusel limpio incrustado exactamente en el espacio correcto -->
-    <iframe src="carrusel1.html" style="width: 100%; height: 420px; border: none; overflow: hidden; background: transparent; margin: 10px 0;" scrolling="no"></iframe>
+    <iframe src="{{ url_for('static', filename='carrusel1.html') }}" style="width: 100%; height: 420px; border: none; overflow: hidden; background: transparent; margin: 10px 0;" scrolling="no"></iframe>
 
       <button class="btn-hero pulse-btn" onclick="openNosotrosModal()">
             <i class="fa-solid fa-users"></i> Conoce Más Sobre Nosotros
@@ -104,7 +101,7 @@
                 
                 <!-- Contenedor Integrado del Carrusel Interactivo -->
                 <div style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(240, 236, 236, 0.1); background: #0a0a0a;">
-                    <iframe src="carrusel.html" style="width: 100%; height: 100%; border: none; overflow: hidden;" scrolling="no"></iframe>
+                    <iframe src="{{ url_for('static', filename='carrusel.html') }}" style="width: 100%; height: 100%; border: none; overflow: hidden;" scrolling="no"></iframe>
                 </div>
             </div>
         </section>
@@ -166,7 +163,7 @@
         <div>&copy; 2026 Minera Andina del Sur S.A.C. - Contacto | Redes Sociales | Oficinas | Mapa del Sitio</div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
