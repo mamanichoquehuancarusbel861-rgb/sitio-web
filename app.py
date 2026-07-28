@@ -1,9 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
 @app.route('/operaciones')
@@ -22,9 +22,21 @@ def empleos():
 def contacto():
     return render_template('contacto.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        # Aquí puedes recibir los datos si deseas validarlos
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        # Redirige exitosamente al panel de administración cuando hacen clic en ingresar
+        return redirect(url_for('admin'))
+        
     return render_template('login.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
