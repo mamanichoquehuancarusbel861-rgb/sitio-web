@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minera Andina del Sur S.A.C. - Inicio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <img src="http://127.0.0.1:8090/_/" alt="Descripción de la imagen">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <!-- ENCABEZADO PRINCIPAL -->
     <header class="main-web-header">
@@ -20,13 +23,12 @@
         
         <nav aria-label="Navegación principal">
             <ul class="web-nav">
-                <li><a href="index.html" class="nav-btn active">Inicio</a></li>
-                <li><a href="operaciones.html" class="nav-btn">Operaciones</a></li>
-                <li><a href="proyectos.html" class="nav-btn">Proyectos</a></li>
-                <li><a href="empleos.html" class="nav-btn">Empleos</a></li>
-                <li><a href="contacto.html" class="nav-btn">Contacto</a></li>
-                <!-- Acceso Admin oculto por defecto -->
-                <li><a href="login.html" id="nav-login-btn" class="nav-btn" style="display: none; background: #d4af37; color: #0a0a0a; font-weight: bold;"><i class="fa-solid fa-lock"></i> Acceso Admin</a></li>
+                <li><a href="{{ url_for('home') }}" class="nav-btn active">Inicio</a></li>
+<li><a href="{{ url_for('operaciones') }}" class="nav-btn">Operaciones</a></li>
+<li><a href="{{ url_for('proyectos') }}" class="nav-btn">Proyectos</a></li>
+<li><a href="{{ url_for('empleos') }}" class="nav-btn">Empleos</a></li>
+<li><a href="{{ url_for('contacto') }}" class="nav-btn">Contacto</a></li>
+<li><a href="{{ url_for('login') }}" class="nav-btn" id="nav-login-btn">Login</a></li>
             </ul>
         </nav>
         
