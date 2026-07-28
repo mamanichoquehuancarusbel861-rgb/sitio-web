@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minera Andina del Sur S.A.C. - Inicio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+<body>
+
+    <!-- ENCABEZADO PRINCIPAL -->
+    <header class="main-web-header">
+        <!-- Logotipo con ID secreto y color blanco forzado -->
+        <div class="web-logo">
+            <a href="#" id="secretLogo" style="text-decoration: none; color: #ffffff !important; font-weight: bold; cursor: pointer;">M.A.S. S.A.C.</a>
+        </div>
+        
+        <nav aria-label="Navegación principal">
+            <ul class="web-nav">
+                <li><a href="index.html" class="nav-btn active">Inicio</a></li>
+                <li><a href="operaciones.html" class="nav-btn">Operaciones</a></li>
+                <li><a href="proyectos.html" class="nav-btn">Proyectos</a></li>
+                <li><a href="empleos.html" class="nav-btn">Empleos</a></li>
+                <li><a href="contacto.html" class="nav-btn">Contacto</a></li>
+                <!-- Acceso Admin oculto por defecto -->
+                <li><a href="login.html" id="nav-login-btn" class="nav-btn" style="display: none; background: #d4af37; color: #0a0a0a; font-weight: bold;"><i class="fa-solid fa-lock"></i> Acceso Admin</a></li>
+            </ul>
+        </nav>
+        
+        <div class="search-box">
+            <input type="text" id="web-search-input" placeholder="Buscar en la web...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL PANTALLA COMPLETA -->
+    <main class="main-content-full">
+        
+       <!-- HERO BANNER CON IMAGEN DE FONDO DE IMPACTO -->
+<section class="section-container">
+    <h1 class="hero-title">COMPROMETIDOS CON UNA MINERÍA RESPONSABLE Y SOSTENIBLE</h1>
+<p class="hero-subtitle">Protección del medio ambiente, altos estándares de ingeniería y desarrollo social para nuestras comunidades.</p>
+
+    <!-- El carrusel limpio incrustado exactamente en el espacio correcto -->
+    <iframe src="carrusel1.html" style="width: 100%; height: 420px; border: none; overflow: hidden; background: transparent; margin: 10px 0;" scrolling="no"></iframe>
+
+      <button class="btn-hero pulse-btn" onclick="openNosotrosModal()">
+            <i class="fa-solid fa-users"></i> Conoce Más Sobre Nosotros
+        </button>
+    </section>
+
+        <!-- 1. OPERACIONES -->
+        <section class="home-block">
+            <h3 class="block-title"><i class="fa-solid fa-gears"></i> Operaciones</h3>
+            <div class="grid-4-cols">
+                <div class="mini-card"><i class="fa-solid fa-compass"></i><strong>Exploración</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-mountain"></i><strong>Extracción</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-industry"></i><strong>Procesamiento</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-shield-halved"></i><strong>Seguridad Operacional</strong></div>
+            </div>
+        </section>
+
+        <!-- 2. PROYECTOS MINEROS -->
+        <section class="home-block">
+            <h3 class="block-title"><i class="fa-solid fa-gem"></i> Proyectos Mineros</h3>
+            <div class="grid-3-cols">
+                <div class="mini-card highlight"><i class="fa-solid fa-coins"></i><strong>Proyecto Oro Andino</strong></div>
+                <div class="mini-card highlight"><i class="fa-solid fa-cubes"></i><strong>Proyecto Cobre Sur</strong></div>
+                <div class="mini-card highlight"><i class="fa-solid fa-layer-group"></i><strong>Proyecto Plata Altiplano</strong></div>
+            </div>
+        </section>
+
+        <!-- 3. SOSTENIBILIDAD (ÚNICA) -->
+        <section class="home-block">
+            <h3 class="block-title"><i class="fa-solid fa-leaf"></i> Sostenibilidad</h3>
+            <div class="grid-4-cols">
+                <div class="mini-card"><i class="fa-solid fa-tree"></i><strong>Medio Ambiente</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-handshake"></i><strong>Comunidad</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-user-shield"></i><strong>Seguridad</strong></div>
+                <div class="mini-card"><i class="fa-solid fa-scale-balanced"></i><strong>Transparencia</strong></div>
+            </div>
+        </section>
+
+      <!-- 4. TRABAJA CON NOSOTROS Y GALERÍA MULTIMEDIA -->
+        <section class="home-block">
+            <h3 class="block-title"><i class="fa-solid fa-briefcase"></i> Trabaja con Nosotros</h3>
+            <div class="grid-4-cols">
+                <div class="mini-card">Ofertas Laborales</div>
+                <div class="mini-card">Prácticas Profesionales</div>
+                <div class="mini-card">Postulación en Línea</div>
+                <div class="mini-card">Beneficios</div>
+            </div>
+
+         <!-- Noticia 3: Galería multimedia de operaciones -->
+            <div style="margin-top: 25px;">
+                <h4 style="margin-bottom: 12px; color: #f6f2f2; font-size: 1.1rem;">
+                    🖼️ <strong>Noticia 3:</strong> Galería multimedia de operaciones
+                </h4>
+                
+                <!-- Contenedor Integrado del Carrusel Interactivo -->
+                <div style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(240, 236, 236, 0.1); background: #0a0a0a;">
+                    <iframe src="carrusel.html" style="width: 100%; height: 100%; border: none; overflow: hidden;" scrolling="no"></iframe>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VENTANA MODAL SEMITRANSPARENTE "NOSOTROS" -->
+    <div id="modalNosotros" class="modal-overlay-transparent">
+        <div class="modal-card-transparent">
+            <button class="btn-close-modal" onclick="closeNosotrosModal()">&times;</button>
+            <h3 class="modal-nosotros-title"><i class="fa-solid fa-users"></i> NOSOTROS</h3>
+            <p class="modal-subtitle">Estructura según el Mapa de Sitio corporativo:</p>
+
+            <div class="nosotros-accordion">
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-landmark"></i> Historia</summary>
+                    <div class="accordion-content">
+                        <p>Trayectoria institucional orientada a la explotación responsable en la región sur del Perú.</p>
+                    </div>
+                </details>
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-compass"></i> Misión, Visión, Valores y ética</summary>
+                    <div class="accordion-content">
+                        <p><strong>Misión:</strong> Extraer y procesar recursos minerales de manera eficiente y sostenible.</p>
+                        <p><strong>Visión:</strong> Ser referentes en excelencia operacional y relaciones comunitarias.</p>
+                        <p><strong>Valores y Ética:</strong> Transparencia, responsabilidad socio-ambiental e integridad.</p>
+                    </div>
+                </details>
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-sitemap"></i> Organigrama</summary>
+                    <div class="accordion-content">
+                        <p>Estructura jerárquica: Junta General de Accionistas, Directorio y Gerencias Operativas.</p>
+                    </div>
+                </details>
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-building-columns"></i> Gobierno Corporativo</summary>
+                    <div class="accordion-content">
+                        <p>Políticas internas para asegurar la transparencia de la gestión gerencial.</p>
+                    </div>
+                </details>
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-file-lines"></i> Informes</summary>
+                    <div class="accordion-content">
+                        <p>Reportes de gestión, financieros y socioambientales de libre acceso.</p>
+                    </div>
+                </details>
+                <details class="accordion-item">
+                    <summary><i class="fa-solid fa-award"></i> Certificación</summary>
+                    <div class="accordion-content">
+                        <p>Certificaciones ISO 14001, ISO 45001 e ISO 9001 en gestión operacional.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA GLOBAL -->
+    <main class="main-web-footer">
+        <div>&copy; 2026 Minera Andina del Sur S.A.C. - Contacto | Redes Sociales | Oficinas | Mapa del Sitio</div>
+    </main>
+
+    <script src="script.js"></script>
+
+    <!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    effect: "fade",
+    loop: true,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+</script>
+
+<!-- Fondo interactivo de ondas -->
+<div class="canvas-bg-container" aria-hidden="true">
+    <canvas id="heroCanvas"></canvas>
+</div>
+
+<script>
+    const config = {
+        backgroundColor: "#0A0A0A",
+        lineColor: "rgb(255, 255, 255)",
+        lineWidth: 1.5,
+        lineCount: 76,
+        speed: 6,
+        glow: 12,
+        interactive: true
+    };
+
+    const canvas = document.getElementById('heroCanvas');
+    const container = canvas.parentElement;
+    const ctx = canvas.getContext('2d');
+
+    let width = 0;
+    let height = 0;
+    let dpr = window.devicePixelRatio || 1;
+    let frameCount = 0;
+    let animationId = null;
+
+    const mouse = { y: 0, targetY: 0 };
+
+    function parseRGB(str) {
+        if (!str) return { r: 255, g: 255, b: 255 };
+        const m = str.match(/rgba?\(([^)]+)\)/i);
+        if (m) {
+            const [r, g, b] = m[1].split(",").map((n) => parseInt(n.trim(), 10));
+            return { r, g, b };
+        }
+        let hex = str.replace(/^#/, "");
+        if (hex.length === 3)
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        if (hex.length >= 6)
+            return {
+                r: parseInt(hex.slice(0, 2), 16),
+                g: parseInt(hex.slice(2, 4), 16),
+                b: parseInt(hex.slice(4, 6), 16),
+            };
+        return { r: 255, g: 255, b: 255 };
+    }
+
+    const map = (v, a, b, c, d) => ((v - a) / (b - a)) * (d - c) + c;
+    const TWO_PI = 2 * Math.PI;
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        if (mouse.targetY === 0) {
+            mouse.targetY = height / 2;
+            mouse.y = height / 2;
+        }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    if (config.interactive) {
+        window.addEventListener('mousemove', (ev) => {
+            mouse.targetY = ev.clientY;
+        }, { passive: true });
+    }
+
+    function draw() {
+        frameCount++;
+        mouse.y = mouse.y + (mouse.targetY - mouse.y) * 0.1;
+
+        ctx.fillStyle = config.backgroundColor;
+        ctx.fillRect(0, 0, width, height);
+
+        const isMobile = width < 768;
+        const u = 55000 / config.glow;
+        const { r: cr, g: cg, b: cb } = parseRGB(config.lineColor);
+
+        ctx.save();
+        ctx.lineWidth = config.lineWidth;
+        ctx.translate(width / 2, height + (isMobile ? 60 : 40));
+
+        const f = config.interactive ? map(mouse.y, 0, height, 1.2, -1.2) : 0;
+        const m = Math.max(320, Math.min(1440, width));
+        const rate = map(m, 320, 1440, 0.002, 5e-4) * (config.speed / 5);
+        const p = frameCount * rate;
+        const h = width / 2;
+        const xCount = isMobile ? Math.round(config.lineCount * 0.6) : config.lineCount;
+
+        for (let k = 0; k < xCount; k++) {
+            let ang = map(k, 0, xCount, 0, Math.PI) + p;
+            ang %= Math.PI;
+            const l = (Math.tan(ang) - f) * height;
+            const a = Math.abs(l) / 2;
+            const yCenter = -height / 2 + l / 2;
+            
+            const bright = Math.max(0, Math.min(255, map(Math.abs(l), 0, u, -20, 255))) / 255 * 0.75;
+            
+            if (bright <= 0) continue;
+
+            ctx.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, ${bright})`;
+
+            if (a > 499999.5) {
+                ctx.beginPath();
+                ctx.moveTo(-h, -height / 2);
+                ctx.lineTo(h, -height / 2);
+                ctx.stroke();
+                continue;
+            }
+
+            const c2 = Math.acos(Math.min(1, (h + 50) / a));
+            const segTotal = Math.max(Math.ceil(a / 120), 200);
+            const spans = [
+                [c2, Math.PI - c2],
+                [Math.PI + c2, TWO_PI - c2],
+            ];
+
+            for (const [start, end] of spans) {
+                const span = end - start;
+                const n3 = Math.max(Math.ceil((span / TWO_PI) * segTotal), 60);
+                const step = span / n3;
+                ctx.beginPath();
+                for (let s = 0; s <= n3; s++) {
+                    const aa = start + step * s;
+                    const xx = Math.cos(aa) * a;
+                    const yy = yCenter + Math.sin(aa) * a;
+                    s === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
+                }
+                ctx.stroke();
+            }
+        }
+
+        ctx.restore();
+        animationId = requestAnimationFrame(draw);
+    }
+
+    animationId = requestAnimationFrame(draw);
+</script>
+  
+<script>
+    // Función global para el botón de Nosotros
+    window.openNosotrosModal = function() {
+        const modal = document.getElementById('modalNosotros');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closeNosotrosModal = function() {
+        const modal = document.getElementById('modalNosotros');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('modalNosotros');
+        if (event.target === modal) {
+            window.closeNosotrosModal();
+        }
+    });
+
+    // SISTEMA DE 5 CLICS SECRETOS EN EL LOGOTIPO
+    let clickCount = 0;
+    let clickTimer = null;
+
+    const logo = document.getElementById('secretLogo');
+    const adminLink = document.getElementById('nav-login-btn');
+
+    if (logo && adminLink) {
+        logo.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita recargas o saltos molestos
+            clickCount++;
+
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 1500); // Tiempo límite para dar los 5 clics rápidos
+
+            if (clickCount === 5) {
+                clickCount = 0;
+                adminLink.style.display = 'inline-flex'; // Muestra el botón en la barra
+                window.location.href = "login.html"; // Redirige directamente al panel de acceso
+            }
+        });
+    }
+</script>
+</body>
+</html>

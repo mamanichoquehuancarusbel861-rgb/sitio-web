@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel Interactivo</title>
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@11/dist/framer-motion.js"></script>
+    <!-- Babel para compilar JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- PocketBase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.umd.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        #root {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+        const { motion, AnimatePresence } = Motion;
+
+        // Inicializa PocketBase (cambia la URL por la de tu servidor si es necesario)
+        const pb = new PocketBase('http://127.0.0.1:8090');
+
+        function modIdx(i, n) { return ((i % n) + n) % n; }
+        function easeCubicInOut(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
+        function srcOf(v) { return typeof v === "string" ? v : v?.src || ""; }
+
+        function KlarnaCarousel() {
+            const [list, setList] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            // Cargar datos dinámicamente desde PocketBase al iniciar
+           useEffect(() => {
+            async function fetchRecords() {
+                try {
+                    // Apuntamos a tu nueva colección 'carrusel'
+                    const records = await pb.collection('carrusel').getFullList({
+                        sort: '-created',
+                    });
+
+                    if (records.length > 0) {
+                        const record = records[0]; // Tomamos el primer registro que contenga los avatares
+                        
+                        // Extraemos cada imagen usando los nombres de campos que creaste
+                        const avatarKeys = ['avatar01', 'avatar02', 'avatar03', 'avatar04', 'avatar05', 'avatar06', 'avatar07'];
+                        
+                        const items = avatarKeys
+                            .filter(key => record[key]) // Solo los campos que tengan una imagen subida
+                            .map(key => {
+                                const imageUrl = pb.files.getUrl(record, record[key]);
+                                return {
+                                    image: { src: imageUrl },
+                                    buttonImage: { src: imageUrl },
+                                    label: `Perfil ${key.replace('avatar', '')}` // Etiqueta dinámica opcional
+                                };
+                            });
+
+                        setList(items);
+                    }
+                } catch (error) {
+                    console.error("Error al cargar datos de PocketBase:", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+            fetchRecords();
+        }, []);
+            const M = list.length;
+
+            const posRef = useRef(0);
+            const [posDisplay, setPosDisplay] = useState(0);
+            const rafRef = useRef(null);
+            const animRef = useRef({ startPos: 0, targetPos: 0, startTime: 0 });
+            const [dir, setDir] = useState(1);
+
+            const active = M > 0 ? modIdx(Math.round(posDisplay), M) : 0;
+            const buttonCount = 7, buttonSize = 40, buttonRadius = 20, curve = 5, gap = 26;
+            const half = M > 0 ? Math.floor(Math.min(Math.max(1, buttonCount), M) / 2) : 0;
+            const buffer = half + 1;
+
+            const cardRadiusPx = (15 / 20) * (250 / 2);
+            const buttonRadiusPx = (Math.max(0, Math.min(20, buttonRadius)) / 20) * (buttonSize / 2);
+            const t = Math.max(0.0001, Math.min(10, curve) / 10);
+            const step = buttonSize + gap;
+            const dPsi = M > 0 ? ((Math.PI * 2) / M) * t : 0;
+            const R = dPsi > 0 ? step / (2 * Math.sin(dPsi / 2)) : 0;
+            const baseTop = buttonSize * 0.9;
+            const fadeInner = Math.max(0, half - 0.4);
+            const fadeEnd = half + 0.6;
+            const maxPsi = Math.min(Math.PI, fadeEnd * dPsi);
+            const stripHeight = baseTop + R * (1 - Math.cos(maxPsi)) + buttonSize / 2 + 16;
+
+            const select = useCallback((itemIdx) => {
+                if (M === 0) return;
+                let delta = itemIdx - Math.round(posRef.current);
+                delta = ((delta % M) + M) % M;
+                if (delta > M / 2) delta -= M;
+                setDir(Math.sign(delta));
+
+                if (rafRef.current) cancelAnimationFrame(rafRef.current);
+                animRef.current = { startPos: posRef.current, targetPos: posRef.current + delta, startTime: performance.now() };
+
+                const DURATION = 320;
+                function tick(now) {
+                    const { startPos, targetPos, startTime } = animRef.current;
+                    const progress = Math.min(1, (now - startTime) / DURATION);
+                    posRef.current = startPos + (targetPos - startPos) * easeCubicInOut(progress);
+                    setPosDisplay(posRef.current);
+                    if (progress < 1) {
+                        rafRef.current = requestAnimationFrame(tick);
+                    } else {
+                        posRef.current = targetPos;
+                        setPosDisplay(targetPos);
+                        rafRef.current = null;
+                    }
+                }
+                rafRef.current = requestAnimationFrame(tick);
+            }, [M]);
+
+            const center = Math.round(posDisplay);
+            const renderItems = [];
+            const seen = new Set();
+            if (M > 0) {
+                for (let s = -buffer; s <= buffer; s++) {
+                    const idx = modIdx(center + s, M);
+                    if (!seen.has(idx)) { seen.add(idx); renderItems.push(idx); }
+                }
+            }
+
+            function getVisualSlot(itemIdx) {
+                if (M === 0) return 0;
+                let slot = itemIdx - posDisplay;
+                slot = slot % M;
+                if (slot > M / 2) slot -= M;
+                if (slot < -M / 2) slot += M;
+                return slot;
+            }
+
+            function slotStyle(slot) {
+                const angle = slot * dPsi;
+                const x = R * Math.sin(angle);
+                const y = R * (1 - Math.cos(angle));
+                const deg = (angle * 180) / Math.PI;
+                const absSlot = Math.abs(slot);
+                const depth = Math.max(0, 1 - (0.55 * absSlot) / Math.max(1, half));
+                const scale = 0.55 + 0.45 * depth;
+                const opacity = absSlot <= fadeInner ? 1 : absSlot >= fadeEnd ? 0 : 1 - (absSlot - fadeInner) / (fadeEnd - fadeInner);
+                const zIndex = Math.round(depth * 100) + (absSlot < 0.5 ? 100 : 0);
+                return { x, y, deg, scale, opacity, zIndex };
+            }
+
+            if (loading) {
+                return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", color: "#fff" }}>Cargando desde PocketBase...</div>;
+            }
+
+            if (M === 0) {
+                return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", color: "#fff" }}>No se encontraron registros en la base de datos.</div>;
+            }
+
+            return (
+                <div style={{ 
+                    position: "relative", 
+                    width: "100%", 
+                    height: "100%", 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    alignItems: "center", 
+                    justifyContent: "center", 
+                    gap: 16, 
+                    background: "linear-gradient(145deg, #121214 0%, #09090b 100%)",
+                    borderRadius: "16px",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)"
+                }}>
+                    <div style={{ position: "relative", width: 220, height: 220, borderRadius: cardRadiusPx, overflow: "hidden" }}>
+                        <AnimatePresence mode="popLayout" initial={false} custom={dir}>
+                            <motion.div key={active} custom={dir}
+                                variants={{
+                                    enter: (d) => ({ x: d * 260, y: 150, opacity: 0, scale: 0.82, rotate: d * 8 }),
+                                    center: { x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 },
+                                    exit: (d) => ({ x: -d * 260, y: 150, opacity: 0, scale: 0.82, rotate: -d * 8 })
+                                }}
+                                initial="enter" animate="center" exit="exit"
+                                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                                style={{ position: "absolute", inset: 0 }}
+                            >
+                                <img src={srcOf(list[active]?.image)} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    <AnimatePresence mode="popLayout" initial={false}>
+                        <motion.div key={`label-${active}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+                            style={{ fontSize: 22, color: "#ffffff", fontWeight: 400, textAlign: "center" }}
+                        >
+                            {list[active]?.label ?? ""}
+                        </motion.div>
+                    </AnimatePresence>
+
+                    <div style={{ position: "relative", width: "100%", height: stripHeight, overflow: "hidden" }}>
+                        {renderItems.map((itemIdx) => {
+                            const slot = getVisualSlot(itemIdx);
+                            const { x, y, deg, scale, opacity, zIndex } = slotStyle(slot);
+                            const isActive = itemIdx === active;
+
+                            return (
+                                <div key={itemIdx} style={{
+                                    position: "absolute", left: "50%", top: baseTop,
+                                    marginLeft: -buttonSize / 2, marginTop: -buttonSize / 2,
+                                    width: buttonSize, height: buttonSize,
+                                    transform: `translate(${x}px, ${y}px) rotate(${deg}deg) scale(${scale})`,
+                                    transformOrigin: "center", opacity, zIndex
+                                }}>
+                                    <div onClick={() => select(itemIdx)} style={{
+                                        width: "100%", height: "100%", borderRadius: buttonRadiusPx, overflow: "hidden",
+                                        background: isActive ? "#ffffff" : "rgba(255,255,255,0.55)",
+                                        cursor: "pointer", transform: `rotate(${-deg}deg)`, transformOrigin: "center"
+                                    }}>
+                                        <img src={srcOf(list[itemIdx]?.buttonImage)} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<KlarnaCarousel />, document.getElementById("root"));
+    </script>
+</body>
+</html>

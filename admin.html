@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - M.A.S. S.A.C.</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+
+    <header class="main-web-header">
+        <div class="web-logo"><a href="index.html">M.A.S. S.A.C. - Admin</a></div>
+        <nav>
+            <ul class="web-nav">
+                <li><a href="#" class="nav-btn active" id="admin-user-email">Cargando...</a></li>
+                <li><button id="logout-btn" class="nav-btn" style="background: #e74c3c; border: none; cursor: pointer;">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="web-section active">
+            <div class="web-card-container">
+                <h3 class="web-section-title">Gestión de Proyectos Mineros</h3>
+                <p>Bienvenido al panel de control. Aquí puedes actualizar la información de las unidades mineras.</p>
+                
+                <div class="admin-form-container" style="margin-top: 20px;">
+                    <h4>Seleccione el proyecto a editar:</h4>
+                    <select id="select-project-target" style="padding: 8px; font-size: 15px; margin-bottom: 20px; width: 100%; background: #1a232a; color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px;">
+                        <option value="0">Proyecto 1 (Oro Andino)</option>
+                        <option value="1">Proyecto 2 (Cobre Sur)</option>
+                        <option value="2">Proyecto 3 (Plata Altiplano)</option>
+                    </select>
+
+                    <div class="info-row">
+                        <label>Ubicación Geográfica:</label>
+                        <input type="text" id="admin-ubica" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    <div class="info-row" style="margin-top: 15px;">
+                        <label>Capacidad / Producción:</label>
+                        <input type="text" id="admin-produ" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    <div class="info-row" style="margin-top: 15px;">
+                        <label>Estado Operativo:</label>
+                        <input type="text" id="admin-estado" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <button id="save-changes-btn" class="btn-submit" style="margin-top: 20px; padding: 10px 20px; background: #E5C158; color: #0f171e; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">Guardar Cambios</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import PocketBase from 'https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.es.mjs';
+        const pb = new PocketBase('http://127.0.0.1:8090');
+
+        if (!pb.authStore.isValid) {
+            alert('Acceso no autorizado.');
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('admin-user-email').textContent = `Admin: ${pb.authStore.model.email}`;
+        }
+
+        let cacheRegistros = [];
+        const selectProject = document.getElementById('select-project-target');
+
+        async function cargarRegistros() {
+            try {
+                cacheRegistros = await pb.collection('productos').getFullList({ sort: 'created' });
+                cambiarVista(0);
+            } catch (err) {
+                console.error("Error al conectar con PocketBase:", err);
+            }
+        }
+
+        function cambiarVista(index) {
+            if (cacheRegistros[index]) {
+                const reg = cacheRegistros[index];
+                document.getElementById('admin-ubica').value = reg.ubicacion || '';
+                document.getElementById('admin-produ').value = reg.produccion || '';
+                document.getElementById('admin-estado').value = reg.estado || '';
+            }
+        }
+
+        cargarRegistros();
+
+        selectProject.addEventListener('change', (e) => {
+            cambiarVista(parseInt(e.target.value));
+        });
+
+        document.getElementById('save-changes-btn').addEventListener('click', async () => {
+            const index = parseInt(selectProject.value);
+            if (!cacheRegistros[index]) {
+                alert('No hay registros cargados.');
+                return;
+            }
+
+            const idRegistro = cacheRegistros[index].id;
+            const datosActualizados = {
+                ubicacion: document.getElementById('admin-ubica').value,
+                produccion: document.getElementById('admin-produ').value,
+                estado: document.getElementById('admin-estado').value
+            };
+
+            try {
+                await pb.collection('productos').update(idRegistro, datosActualizados);
+                alert('¡Cambios guardados con éxito en PocketBase!');
+            } catch (err) {
+                console.error(err);
+                alert('Error al actualizar los datos.');
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            pb.authStore.clear();
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

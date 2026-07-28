@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel Magnético con PocketBase</title>
+    <!-- Incluimos el SDK de PocketBase -->
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.umd.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .magnetic-carousel-wrapper {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            overflow: visible;
+            user-select: none;
+        }
+
+        .magnetic-backdrop {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .magnetic-backdrop.active {
+            pointer-events: auto;
+        }
+
+        .magnetic-bar {
+            flex: none;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .loading-text {
+            color: white;
+            position: absolute;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="magnetic-carousel-wrapper" id="magneticCarousel">
+        <div class="loading-text" id="loadingText">Cargando imágenes...</div>
+        <div class="magnetic-backdrop" id="magneticBackdrop"></div>
+    </div>
+
+    <script>
+        // Inicializamos PocketBase (asegúrate de que apunte a tu servidor local)
+        const pb = new PocketBase('http://127.0.0.1:8090');
+
+        const config = {
+            collapsedWidth: 90,
+            hoverWidth: 180,
+            collapsedHeight: 320,
+            hoverHeight: 380,
+            openSize: 480,
+            gap: 16,
+            influence: 200,
+            blur: 4,
+            duration: 0.3
+        };
+
+        const wrapper = document.getElementById('magneticCarousel');
+        const backdrop = document.getElementById('magneticBackdrop');
+        const loadingText = document.getElementById('loadingText');
+
+        let IMAGES = [];
+        let bars = [];
+        let curFactors = [];
+        let targetFactors = [];
+        let openIndex = null;
+        let isClosing = false;
+        let animationFrameId = null;
+        let closeTimeout = null;
+
+        // Función principal para cargar registros desde PocketBase
+        async function initCarousel() {
+            try {
+                const records = await pb.collection('carrusel01').getFullList({
+                    sort: '-created',
+                });
+
+                if (records.length > 0) {
+                    const record = records[0];
+                    const fileKeys = ['file1', 'file2', 'file3', 'file4', 'file5', 'file6', 'file7', 'file8'];
+                    
+                    // Extraer URLs válidas de PocketBase
+                    IMAGES = fileKeys
+                        .filter(key => record[key])
+                        .map(key => ({
+                            src: pb.files.getUrl(record, record[key])
+                        }));
+                }
+            } catch (error) {
+                console.error("Error al conectar con PocketBase:", error);
+            } finally {
+                // Ocultar texto de carga
+                if (loadingText) loadingText.remove();
+                
+                // Si no hay imágenes, usar un respaldo por defecto o dejar vacío
+                if (IMAGES.length === 0) {
+                    IMAGES = [{ src: "" }]; 
+                }
+
+                setupCarousel();
+            }
+        }
+
+        function setupCarousel() {
+            curFactors = IMAGES.map(() => 0);
+            targetFactors = IMAGES.map(() => 0);
+
+            // Crear los elementos visuales (bars) dinámicamente
+            bars = IMAGES.map((img, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'magnetic-bar';
+                bar.style.backgroundImage = `url(${img.src})`;
+                bar.style.transition = 'none';
+                
+                bar.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (openIndex === i) {
+                        closeModal();
+                    } else {
+                        openIndex = i;
+                        updateLayout(true);
+                    }
+                });
+
+                wrapper.appendChild(bar);
+                return bar;
+            });
+
+            backdrop.addEventListener('click', closeModal);
+            initEvents();
+        }
+
+        function closeModal() {
+            openIndex = null;
+            isClosing = true;
+            targetFactors = IMAGES.map(() => 0);
+            curFactors = IMAGES.map(() => 0);
+            updateLayout(true);
+            clearTimeout(closeTimeout);
+            closeTimeout = setTimeout(() => {
+                isClosing = false;
+            }, config.duration * 1000);
+        }
+
+        function initEvents() {
+            wrapper.addEventListener('mousemove', (e) => {
+                if (openIndex !== null) return;
+                const rect = wrapper.getBoundingClientRect();
+                const cx = e.clientX - rect.left;
+                const n = IMAGES.length;
+                const totalBase = n * config.collapsedWidth + (n - 1) * config.gap;
+                const startX = (rect.width - totalBase) / 2;
+
+                targetFactors = IMAGES.map((_, i) => {
+                    const center = startX + i * (config.collapsedWidth + config.gap) + config.collapsedWidth / 2;
+                    const dist = Math.abs(cx - center);
+                    const f = Math.max(0, 1 - dist / config.influence);
+                    return f * f * (3 - 2 * f);
+                });
+
+                startLoop();
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                if (openIndex !== null) return;
+                targetFactors = IMAGES.map(() => 0);
+                startLoop();
+            });
+        }
+
+        function startLoop() {
+            if (animationFrameId) return;
+            const step = () => {
+                let moving = false;
+                for (let i = 0; i < curFactors.length; i++) {
+                    const d = targetFactors[i] - curFactors[i];
+                    if (Math.abs(d) > 0.001) {
+                        curFactors[i] += d * 0.2;
+                        moving = true;
+                    } else {
+                        curFactors[i] = targetFactors[i];
+                    }
+                }
+                updateLayout(false);
+                if (moving) {
+                    animationFrameId = requestAnimationFrame(step);
+                } else {
+                    animationFrameId = null;
+                }
+            };
+            animationFrameId = requestAnimationFrame(step);
+        }
+
+        function updateLayout(isTransitioning) {
+            backdrop.className = `magnetic-backdrop ${openIndex !== null ? 'active' : ''}`;
+            
+            bars.forEach((bar, i) => {
+                let width, height, zIndex, filter, opacity;
+
+                if (openIndex !== null) {
+                    bar.style.transition = `width ${config.duration}s ease-in-out, height ${config.duration}s ease-in-out, filter ${config.duration}s ease-in-out, opacity ${config.duration}s ease-in-out`;
+                    const isOpen = i === openIndex;
+                    width = isOpen ? config.openSize : config.collapsedWidth;
+                    height = isOpen ? config.openSize : config.collapsedHeight;
+                    zIndex = isOpen ? 3 : 2;
+                    filter = !isOpen ? `blur(${config.blur}px)` : 'none';
+                    opacity = !isOpen ? 0.6 : 1;
+                } else {
+                    bar.style.transition = isClosing ? `width ${config.duration}s ease-in-out, height ${config.duration}s ease-in-out` : 'none';
+                    const f = curFactors[i];
+                    width = config.collapsedWidth + (config.hoverWidth - config.collapsedWidth) * f;
+                    height = config.collapsedHeight + (config.hoverHeight - config.collapsedHeight) * f;
+                    zIndex = 2;
+                    filter = 'none';
+                    opacity = 1;
+                }
+
+                bar.style.width = `${width}px`;
+                bar.style.height = `${height}px`;
+                bar.style.zIndex = zIndex;
+                bar.style.filter = filter;
+                bar.style.opacity = opacity;
+            });
+        }
+
+        // Ejecutar al cargar la página
+        initCarousel();
+    </script>
+</body>
+</html>

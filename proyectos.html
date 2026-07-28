@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minera Andina del Sur S.A.C. - Proyectos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-web-header">
+        <div class="web-logo"><a href="index.html">M.A.S. S.A.C.</a></div>
+        <nav>
+            <ul class="web-nav">
+                <li><a href="index.html" class="nav-btn">Inicio</a></li>
+                <li><a href="operaciones.html" class="nav-btn">Operaciones</a></li>
+                <li><a href="proyectos.html" class="nav-btn active">Proyectos</a></li>
+                <li><a href="empleos.html" class="nav-btn">Empleos</a></li>
+                <li><a href="contacto.html" class="nav-btn">Contacto</a></li>
+            </ul>
+        </nav>
+        <div class="search-box">
+            <input type="text" placeholder="Buscar en la web...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="web-section active">
+            <div class="web-card-container">
+                <h3 class="web-section-title">Portafolio Operacional de Proyectos</h3>
+                <div class="sidebar-layout">
+                    <aside class="web-sidebar">
+                        <div class="sidebar-title">Unidades Mineras</div>
+                        <ul class="sidebar-menu">
+                            <li id="side-oro" class="active" onclick="changeProject('oro')">Oro Andino</li>
+                            <li id="side-cobre" onclick="changeProject('cobre')">Cobre Sur</li>
+                            <li id="side-plata" onclick="changeProject('plata')">Plata Altiplano</li>
+                        </ul>
+                    </aside>
+                    <div class="project-details">
+                        <p><strong>Ubicación Geográfica:</strong> <span id="proj-ubica">Cargando...</span></p>
+                        <p><strong>Capacidad / Producción:</strong> <span id="proj-produ">Cargando...</span></p>
+                        <p><strong>Estado Operativo:</strong> <span id="proj-estado">Cargando...</span></p>
+                        <img id="proj-img-element" src="" alt="Imagen del proyecto" style="max-width: 100%; border-radius: 8px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-web-footer">
+        <div>&copy; 2026 Minera Andina del Sur S.A.C. - Todos los derechos reservados.</div>
+    </footer>
+
+    <!-- Script de conexión con PocketBase -->
+   <script type="module">
+    import PocketBase from 'https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.es.mjs';
+    const pb = new PocketBase('http://127.0.0.1:8090');
+
+    window.changeProject = async function(proyectoKey) {
+        try {
+            const records = await pb.collection('productos').getFullList();
+
+            // Busca el registro cuyo campo 'nombre' incluya 'oro', 'cobre' o 'plata'
+            const data = records.find(r => r.nombre && r.nombre.toLowerCase().includes(proyectoKey));
+
+            if (data) {
+                // Nota: Usamos las mayúsculas exactas que tienes en PocketBase (Ubicación, Producción, Estado)
+                document.getElementById('proj-ubica').innerText = data.Ubicación || data.ubicacion || "No especificado";
+                document.getElementById('proj-produ').innerText = data.Producción || data.produccion || "No especificado";
+                document.getElementById('proj-estado').innerText = data.Estado || data.estado || "No especificado";
+
+                if (data.imagen) {
+                    const imageUrl = pb.files.getUrl(data, data.imagen);
+                    const imgElement = document.getElementById('proj-img-element');
+                    if (imgElement) imgElement.src = imageUrl;
+                }
+            } else {
+                console.warn("No se encontró el registro para:", proyectoKey);
+                document.getElementById('proj-ubica').innerText = "Sin registros";
+                document.getElementById('proj-produ').innerText = "Sin registros";
+                document.getElementById('proj-estado').innerText = "Sin registros";
+            }
+
+            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            const sideElement = document.getElementById(`side-${proyectoKey}`);
+            if (sideElement) sideElement.classList.add('active');
+
+        } catch (error) {
+            console.error("Error al obtener los datos del proyecto:", error);
+        }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        window.changeProject('oro');
+    });
+</script>
+</body>
+</html>

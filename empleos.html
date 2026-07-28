@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minera Andina del Sur S.A.C. - Trabaja con Nosotros</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-web-header">
+        <div class="web-logo"><a href="index.html">M.A.S. S.A.C.</a></div>
+        <nav>
+            <ul class="web-nav">
+                <li><a href="index.html" class="nav-btn">Inicio</a></li>
+                <li><a href="operaciones.html" class="nav-btn">Operaciones</a></li>
+                <li><a href="proyectos.html" class="nav-btn">Proyectos</a></li>
+                <li><a href="empleos.html" class="nav-btn active">Empleos</a></li>
+                <li><a href="contacto.html" class="nav-btn">Contacto</a></li>
+            </ul>
+        </nav>
+        <div class="search-box">
+            <input type="text" placeholder="Buscar en la web...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="web-card-container">
+            <h3 class="web-section-title"><i class="fa-solid fa-briefcase"></i> Trabaja con Nosotros</h3>
+            
+            <!-- SUBSECCIONES SOLICITADAS EN EL MAPA DE SITIO -->
+            <div class="grid-4-cols" style="margin-bottom: 25px;">
+                <div class="mini-card active-tab"><strong>Ofertas Laborales</strong></div>
+                <div class="mini-card"><strong>Prácticas Profesionales</strong></div>
+                <div class="mini-card"><strong>Postulación en Línea</strong></div>
+                <div class="mini-card"><strong>Beneficios</strong></div>
+            </div>
+
+            <h4 class="block-title">Oportunidades Laborales Disponibles</h4>
+
+            <!-- PUESTO 1 -->
+            <div class="job-offer">
+                <h4>Puesto 1: Ingeniero de Minas</h4>
+                <p class="job-meta"><i class="fa-solid fa-location-dot"></i> Ubicación: Puno</p>
+                <p class="job-desc"><strong>Requisitos:</strong> Título Profesional, Experiencia mínima de 3 años, Manejo de software minero.</p>
+                <button class="btn-apply" onclick="abrirModal('Ingeniero de Minas')">POSTULAR AHORA</button>
+            </div>
+
+            <!-- PUESTO 2 -->
+            <div class="job-offer">
+                <h4>Puesto 2: Técnico de Operaciones</h4>
+                <p class="job-meta"><i class="fa-solid fa-location-dot"></i> Ubicación: Juliaca</p>
+                <p class="job-desc"><strong>Requisitos:</strong> Técnico titulado en operaciones mineras o afines, experiencia en planta.</p>
+                <button class="btn-apply" onclick="abrirModal('Técnico de Operaciones')">POSTULAR AHORA</button>
+            </div>
+
+            <!-- FLUJOGRAMA OFICIAL DE POSTULACIÓN (12 PASOS) -->
+            <div class="panel-flowchart-container">
+                <div class="panel-flowchart-title"><i class="fa-solid fa-diagram-project"></i> Diagrama de Flujo del Usuario para Postulación Laboral</div>
+                <div class="flow-vertical-stack">
+                    <div class="mini-flow-step"><div class="mini-step-num">1</div><p>Inicio</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">2</div><p>Trabaja con Nosotros</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">3</div><p>Ver Ofertas Laborales</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">4</div><p>Seleccionar Vacante</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">5</div><p>Leer Requisitos</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">6</div><p>Beneficios</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step mini-decision"><div class="mini-step-num">7</div><p>¿Cumple Perfil?</p><span class="mini-decision-labels">SÍ / NO (Fin)</span></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">8</div><p>Completar Formulario</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">9</div><p>Adjuntar CV</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">10</div><p>Enviar Postulación</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step"><div class="mini-step-num">11</div><p>Confirmación</p></div>
+                    <div class="mini-flow-arrow"><i class="fa-solid fa-caret-down"></i></div>
+                    <div class="mini-flow-step final-step"><div class="mini-step-num green-num">12</div><p>Fin del Proceso</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Postulación conectado a PocketBase -->
+    <div id="modalForm" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="modal-card" style="background: white; padding: 25px; border-radius: 8px; width: 380px; position: relative; color: #333;">
+            <h4 style="margin-bottom: 15px;">Postular a: <span id="puesto-titulo" style="color: #d97706;"></span></h4>
+            <form id="form-postulante">
+                <input type="hidden" id="puesto-input">
+                
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="modal-name" style="display:block; font-weight:bold; margin-bottom:4px;">Nombre Completo:</label>
+                    <input type="text" id="modal-name" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="modal-telefono" style="display:block; font-weight:bold; margin-bottom:4px;">Teléfono / Celular:</label>
+                    <input type="text" id="modal-telefono" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="modal-email" style="display:block; font-weight:bold; margin-bottom:4px;">Correo Electrónico:</label>
+                    <input type="email" id="modal-email" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="modal-cv" style="display:block; font-weight:bold; margin-bottom:4px;">Enlace a CV:</label>
+                    <input type="url" id="modal-cv" placeholder="https://..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="modal-actions" style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-close" onclick="closeModal()" style="flex: 1; padding: 10px; background: #ccc; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">Cancelar</button>
+                    <button type="submit" class="btn-submit" style="flex: 1; padding: 10px; background: #E5C158; color: #0f171e; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">Enviar Postulación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="main-web-footer">
+        <div>&copy; 2026 Minera Andina del Sur S.A.C. - Todos los derechos reservados.</div>
+    </footer>
+
+    <!-- SCRIPT DE POCKETBASE Y CONTROL DE MODAL -->
+    <script type="module">
+        import PocketBase from 'https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.es.mjs';
+        const pb = new PocketBase('http://127.0.0.1:8090');
+
+        // Funciones para abrir y cerrar el modal globalmente
+        window.abrirModal = function(puesto) {
+            document.getElementById('puesto-titulo').innerText = puesto;
+            document.getElementById('puesto-input').value = puesto;
+            document.getElementById('modalForm').style.display = 'flex';
+        }
+
+        window.closeModal = function() {
+            document.getElementById('modalForm').style.display = 'none';
+        }
+
+        // Enviar datos del formulario a PocketBase
+        document.getElementById('form-postulante').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                puesto: document.getElementById('puesto-input').value,
+                nombres: document.getElementById('modal-name').value,
+                telefono: document.getElementById('modal-telefono').value,
+                email: document.getElementById('modal-email').value,
+                cv: document.getElementById('modal-cv').value
+            };
+
+            try {
+                // Guarda en la colección 'postulantes' de PocketBase
+                await pb.collection('postulantes').create(data);
+                alert('¡Postulación enviada con éxito! Tus datos fueron guardados correctamente.');
+                document.getElementById('form-postulante').reset();
+                closeModal();
+            } catch (error) {
+                console.error('Error al guardar la postulación:', error);
+                alert('Hubo un error al enviar tus datos. Asegúrate de tener creada la colección "postulantes" en PocketBase con los campos correctos.');
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
